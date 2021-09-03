@@ -9,6 +9,8 @@ use Trebla\ZipCode\Helpers\ClientHelper;
 use Trebla\ZipCode\Interfaces\ZipCodeInterface;
 use Trebla\ZipCode\Services\PagarMeService;
 use Trebla\ZipCode\Services\HttpRequestService;
+use Trebla\ZipCode\Services\RepublicaVirtualService;
+use Trebla\ZipCode\Services\ViaCepService;
 
 class ZipCode implements ZipCodeInterface
 {
@@ -18,10 +20,9 @@ class ZipCode implements ZipCodeInterface
     protected string $option;
 
     /** 
-     * @var PagarMeService 
+     * @var PagarMeService|ViaCepService|RepublicaVirtualService
      */
-    protected PagarMeService $service;
-
+    protected PagarMeService|ViaCepService|RepublicaVirtualService $service;
 
     /** 
      * @var HttpRequestService 
@@ -33,11 +34,13 @@ class ZipCode implements ZipCodeInterface
      */
     protected array $services = [
         ClientHelper::PAGAR_ME => PagarMeService::class,
+        ClientHelper::VIA_CEP => ViaCepService::class,
+        ClientHelper::REPUBLICA_VIRTUAL => RepublicaVirtualService::class,
     ];
 
     public function __construct(
         ?string $option = ClientHelper::PAGAR_ME,
-        ?Client $http = NULL
+        ?HttpRequestService $http = NULL
     ) {
         $this->option = $option;
         $this->http = $http ?: new HttpRequestService(new Client());
@@ -45,9 +48,9 @@ class ZipCode implements ZipCodeInterface
     }
 
     /** 
-     * @return PagarMeService
+     * @return PagarMeService|ViaCepService|RepublicaVirtualService
      */
-    private function instantiateServiceClient(): PagarMeService
+    private function instantiateServiceClient(): PagarMeService|ViaCepService|RepublicaVirtualService
     {
         $this->validateOption();
 

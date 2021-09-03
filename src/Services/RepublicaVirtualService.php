@@ -7,9 +7,9 @@ use Illuminate\Http\Response;
 use Trebla\ZipCode\Entities\ZipCodeEntity;
 use Trebla\ZipCode\Helpers\WebServiceHelper;
 use Trebla\ZipCode\Interfaces\HttpRequestServiceInterface;
-use Trebla\ZipCode\Interfaces\PagarMeInterface;
+use Trebla\ZipCode\Interfaces\RepublicaVirtualInterface;
 
-class PagarMeService implements PagarMeInterface
+class RepublicaVirtualService implements RepublicaVirtualInterface
 {
     /**
      * @var HttpRequestServiceInterface
@@ -27,22 +27,24 @@ class PagarMeService implements PagarMeInterface
      */
     public function find(string $zipcode): ZipCodeEntity
     {
-        $baseUrl = WebServiceHelper::PAGAR_ME_ZIPCODES_BASE_URL;
+        $baseUrl = WebServiceHelper::REPUBLICA_VIRTUAL_CEP_BASE_URL;
 
         try {
-            $response = $this->service->get("{$baseUrl}/{$zipcode}");
+            $response = $this->service->get("{$baseUrl}{$zipcode}&formato=jsonp");
 
             if ($response->getStatusCode() === Response::HTTP_OK) {
                 $json = json_decode($response->getBody()->getContents());
 
-                return new ZipCodeEntity(
-                    $json->street ?? NULL,
-                    $json->neighborhood ?? NULL,
-                    $json->city ?? NULL,
-                    $json->state ?? NULL,
-                    $json->zipcode ?? $zipcode,
-                    $json->country ?? NULL
-                );
+                if ($json->resultado !== "0") {
+                    return new ZipCodeEntity(
+                        "{$json->tipo_logradouro} {$json->logradouro}" ?? NULL,
+                        $json->bairro ?? NULL,
+                        $json->cidade ?? NULL,
+                        $json->uf ?? NULL,
+                        $json->cep ?? $zipcode,
+                        $json->pais ?? NULL
+                    );
+                }
             }
 
             return response()->json(["ZipCode not found"]);

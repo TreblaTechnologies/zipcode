@@ -7,9 +7,9 @@ use Illuminate\Http\Response;
 use Trebla\ZipCode\Entities\ZipCodeEntity;
 use Trebla\ZipCode\Helpers\WebServiceHelper;
 use Trebla\ZipCode\Interfaces\HttpRequestServiceInterface;
-use Trebla\ZipCode\Interfaces\PagarMeInterface;
+use Trebla\ZipCode\Interfaces\ViaCepInterface;
 
-class PagarMeService implements PagarMeInterface
+class ViaCepService implements ViaCepInterface
 {
     /**
      * @var HttpRequestServiceInterface
@@ -27,22 +27,25 @@ class PagarMeService implements PagarMeInterface
      */
     public function find(string $zipcode): ZipCodeEntity
     {
-        $baseUrl = WebServiceHelper::PAGAR_ME_ZIPCODES_BASE_URL;
+        $baseUrl = WebServiceHelper::VIA_CEP_BASE_URL;
 
         try {
-            $response = $this->service->get("{$baseUrl}/{$zipcode}");
+            $response = $this->service->get("{$baseUrl}/{$zipcode}/json");
 
             if ($response->getStatusCode() === Response::HTTP_OK) {
                 $json = json_decode($response->getBody()->getContents());
+                $array = (array) $json;
 
-                return new ZipCodeEntity(
-                    $json->street ?? NULL,
-                    $json->neighborhood ?? NULL,
-                    $json->city ?? NULL,
-                    $json->state ?? NULL,
-                    $json->zipcode ?? $zipcode,
-                    $json->country ?? NULL
-                );
+                if (!array_key_exists('erro', $array)) {
+                    return new ZipCodeEntity(
+                        $array['logradouro'] ?? NULL,
+                        $array['bairro'] ?? NULL,
+                        $array['localidade'] ?? NULL,
+                        $array['uf'] ?? NULL,
+                        $array['cep'] ?? $zipcode,
+                        $array['pais'] ?? NULL
+                    );
+                }
             }
 
             return response()->json(["ZipCode not found"]);
