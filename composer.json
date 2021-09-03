@@ -1,8 +1,9 @@
 {
-    "name": "trebla/package",
-    "description": "Package description.",
+    "name": "trebla/zipcode",
+    "description": "Search for information regarding the zip code from somewhere in Brazil.",
     "require": {
-        "php": "^7.2.5|^8.0"
+        "php": "^7.2.5|^8.0",
+        "guzzlehttp/guzzle": "^7.3"
     },
     "require-dev": {
         "orchestra/testbench": "^4.0|^5.0|^6.0",
@@ -10,12 +11,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Trebla\\Package\\": "src"
+            "Trebla\\ZipCode\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Trebla\\Package\\Test\\": "tests"
+            "Trebla\\ZipCode\\Test\\": "tests"
         }
     },
     "scripts": {

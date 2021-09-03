@@ -9,6 +9,14 @@ nop:
 install:
 	$(DOCKER_RUN_COMPOSER_COMMAND) install
 
+.PHONY: update
+update:
+	$(DOCKER_RUN_COMPOSER_COMMAND) update
+
 .PHONY: test
 test:
 	$(DOCKER_RUN_COMPOSER_COMMAND) test
+
+.PHONY: autoload
+autoload:
+	$(DOCKER_RUN_COMPOSER_COMMAND) dump-autoload

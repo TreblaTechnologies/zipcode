@@ -6,7 +6,7 @@
     </include>
   </coverage>
   <testsuites>
-    <testsuite name="PHP Test Suite">
+    <testsuite name="unit">
       <directory>tests</directory>
     </testsuite>
   </testsuites>
