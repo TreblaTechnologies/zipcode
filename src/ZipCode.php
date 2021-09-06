@@ -44,25 +44,28 @@ class ZipCode implements ZipCodeInterface
     ) {
         $this->option = $option;
         $this->http = $http ?: new HttpRequestService(new Client());
-        $this->service = $this->instantiateServiceClient($option);
+        $this->service = $this->setClient($option);
     }
 
     /** 
+     * @param string|null $option
      * @return PagarMeService|ViaCepService|RepublicaVirtualService
      */
-    private function instantiateServiceClient(): PagarMeService|ViaCepService|RepublicaVirtualService
+    public function setClient(?string $option = NULL): PagarMeService|ViaCepService|RepublicaVirtualService
     {
-        $this->validateOption();
+        $this->validateOption($option);
 
-        return new $this->services[$this->option]($this->http);
+        $this->service = new $this->services[$option ?? $this->option]($this->http);
+        return $this->service;
     }
 
     /** 
+     * @param string|null $option
      * @return void 
      */
-    private function validateOption(): void
+    private function validateOption(?string $option = NULL): void
     {
-        if (!array_key_exists($this->option, $this->services))
+        if (!array_key_exists($option ?? $this->option, $this->services))
             throw new Exception("Invalid service option was given.");
     }
 
