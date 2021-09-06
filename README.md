@@ -45,4 +45,4 @@ public function getAddress(string $zipcode): ZipCodeEntity
 | ------ | ------ |
 | Pagar me | `ZipCodeHelper::PAGAR_ME` |
 | Repúblic Virtual | `ZipCodeHelper::REPUBLICA_VIRTUAL` |
-| Via CEP | `ZipCodeHelper::PAGAR_ME` |
+| Via CEP | `ZipCodeHelper::VIA_CEP` |
