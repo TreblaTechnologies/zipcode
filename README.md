@@ -41,8 +41,8 @@ public function getAddress(string $zipcode): ZipCodeEntity
 
 ## Services available
 
-| Service | Constant |
-| ------ | ------ |
-| Pagar me | `ZipCodeHelper::PAGAR_ME` |
-| Repúblic Virtual | `ZipCodeHelper::REPUBLICA_VIRTUAL` |
-| Via CEP | `ZipCodeHelper::VIA_CEP` |
+| Service | Constant | Default |
+| ------ | ------ | ------ | 
+| Pagar me | `ZipCodeHelper::PAGAR_ME` | X |
+| Repúblic Virtual | `ZipCodeHelper::REPUBLICA_VIRTUAL` | |
+| Via CEP | `ZipCodeHelper::VIA_CEP` | |
